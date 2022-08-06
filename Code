@@ -1,0 +1,85 @@
+install.packages(c("survival", "survminer","pacman"))
+
+library(lubridate)
+library("survival")
+library("survminer")
+library(gridExtra)
+
+
+########### ORGANIZING THE DATA ###########
+
+## Import CSV - header = TRUE puts the first row as the column names
+SurvivalOutput_csv <- read.csv("D:/NYU/IndependentStudy/DummyData/150r09.csv", header = TRUE)
+
+## These functions help give a view of the data
+typeof(SurvivalOutput_csv)
+str(SurvivalOutput_csv)
+head(SurvivalOutput_csv)
+
+## Remove unneeded columns and create a new table to manipulate
+SurvivalLight <- SurvivalOutput_csv[,c(1:6)]
+
+## Translate the text date (assuming Month Day Year order) into date YYYY-MM-DD
+SurvivalLight$HireDate <- mdy(SurvivalLight$HireDate)
+SurvivalLight$TermDate <- mdy(SurvivalLight$TermDate)
+
+## Calculate Tenure (in days)
+SurvivalLight$TenureDays <- SurvivalLight$TermDate - SurvivalLight$HireDate
+
+## Create a censor column - 0 = active, 1 = terminated
+SurvivalLight$Censor <- ifelse(is.na(SurvivalLight$TermDate),0,1)
+
+## Look at the data again to verify that it's cleaned up
+str(SurvivalLight)
+
+
+########### TESTING SIGNIFICANCE ###########
+
+# This creates the survival curve based on days worked (TenureDays) and if they are still active (Censor).  It uses SurvivalLight as the data set and looks at the Gender, Race, and Division.
+cox_model <- survival::coxph(
+  formula = Surv(event = Censor, time = TenureDays) ~ Gender + Race + Division, data = SurvivalLight)
+
+# This displays  the significance
+summary(cox_model)
+
+# If there is significance, those factors can be expressed in charts
+
+
+########### SURVIVAL CHARTS ###########
+
+# This creates the survival curve stored as "fit" based on days worked (TenureDays) and if they are still active (Censor).  It uses SurvivalLight as the data set and looks at the Gender.
+# For these charts we are only looking at Gender
+fit <- survfit(Surv(TenureDays ,Censor)
+               ~ Gender, data = SurvivalLight)
+
+# Cumulative Event Chart
+# The "tiff(" and "dev.off()" export this chart as a high quality graph
+tiff("CumulativeEvent.tiff", units="in", width=7, height=4, res=500)
+ggsurvplot(fit, data = SurvivalLight, fun = "event", xlab = "Time (days)",
+           legend.labs = c("Female","Male","Non binary"),
+           palette = c("#E7B800","#2E9FDF","#661062"))
+dev.off()
+
+# Cumulative Hazard Chart
+tiff("Cumulative Hazard.tiff", units="in", width=7, height=4, res=500)
+ggsurvplot(fit, data = SurvivalLight, fun = "cumhaz", xlab = "Time (days)",
+           legend.labs = c("Female","Male","Non binary"),
+           palette = c("#E7B800","#2E9FDF","#661062"))
+dev.off()
+
+# Survival Probability 
+tiff("SurvivalProbability.tiff", units="in", width=7, height=4, res=500)
+ggsurvplot(fit, data = SurvivalLight,
+           conf.int = TRUE,
+           pval = FALSE,
+           fun = "pct",
+           risk.table = FALSE,
+           risk.table.type = "number", 
+           size = 1,
+           xlab = "Time (days)",
+           linetype = "strata",
+           palette = c("#E7B800","#2E9FDF","#661062"),
+           legend = "top",
+           legend.title = "Sex",
+           legend.labs = c("Female","Male","Non binary"))
+dev.off()
