@@ -34,7 +34,7 @@ Another way to to look at the results is to consider the chance someone will sur
 <img src="https://github.com/LookHere/Diversity-Through-Survival-Functions/blob/main/images/SurvivalProbabilitySmall.jpg" width=50% height=50%>
 
 
-### Validity
+## Validity
 
 A main concern for this type of correlation analysis is false positives.  To test against that, I created the [Look Here Dummy Dataset](https://github.com/LookHere/Look-Here-Dummy-Data) that procedurally generates employees based on categories (gender, race, division) and their ratios (based on national rates), in addition to hire and termination dates.  Since the dummy data is based on a randomized collection of these categories, there is no bias in it.  If the model finds no bias in the dummy data but finds bias in the live data, it will give us confidence in the vailidity of the model.
 
