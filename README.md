@@ -29,7 +29,9 @@ Another way to to look at the results is to consider the chance someone will sur
 
 ## Validity
 
-A main concern for this type of correlation analysis is false positives.  To test against that, I created the [Look Here Dummy Dataset](https://github.com/LookHere/Look-Here-Dummy-Data) that procedurally generates employees based on categories (gender, race, division) based on US national averages, in addition to hire and termination dates.  Since the dummy data is based on a randomized collection of these categories, there is no bias in it.  If the model finds no bias in the dummy data but finds bias in the live data, it will give us confidence in the vailidity of the model.
+A main concern for this type of correlation analysis is false positives.  To test against that, I created the [Look Here Dummy Dataset](https://github.com/LookHere/Look-Here-Dummy-Data) that procedurally generates synthetic employees with categories (gender, race, division) based on US national averages.  Each employee has a randomly created hire and termination dates to determine their tenure.  
+
+Since the dummy data is based on a randomized collection of these categories, there is no bias in it.  If the model finds no bias in the dummy data but finds bias in the live data, it will give us confidence in the validity of the model.  Since this method easily creates and analyzes dummy data populations, it can be run repeatedly; multiple unbiased trials should look significantly different than the live data if the live data has bias.
 
 ## Model Implementation
 The Cox Proportional Hazard model can be implemented in multiple systems.  For simplicity we use the coding language R here since it is a free software platform developed for statistical methods.
@@ -68,4 +70,4 @@ For the organizations with 20 employees, 7 of the 10 had over 0.8 concordance, (
 
 <img src="https://github.com/LookHere/Diversity-Through-Survival-Functions/blob/main/images/Concordance2.png" width=75% height=75%>
 
-For the second round of testing, only 2 of 10 organizations with 20 employees passed all tests, (falsely) implying there is statistically significant bias.  No other headcount levels had any organizations that identified bias where there was none.  Taking all of these results into consideration, it appears that the Cox Proportional Hazard model is not a good tool for diversity analysis for organizations under 50 employees.  
+For the second round of testing, only 2 of 10 organizations with 20 employees passed all tests, (falsely) implying there is statistically significant bias.  No other headcount levels had any organizations that identified bias where there was none.  Taking all of these results into consideration, it appears that the Cox Proportional Hazard model is not a good tool for diversity analysis for organizations under 50 employees but may provide insights for organizations larger than 50 employees.  
