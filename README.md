@@ -3,7 +3,7 @@
 
 
 
-The objective of this project is to explore whether commonly collected people data and survival analysis can be used to indicate group differences that may help in identifying instances of structural or unconscious bias.  
+The objective of this project is to explore whether we can use survival analysis on commonly collected people data to indicate group differences that may help in identifying instances of structural or unconscious bias.  
 
 Commonly used Diversity, Equity, Inclusion, and Belonging (DEIB) analytics often focus on survey results or on reported demographic headcounts.  Although those are useful, they may overlook some indicators of structural or unconscious bias.  Using the Cox Proportional Hazard model may help identify groups with these problems, though such analysis will not identify the specific bias each group faces.  Identifying these groups can be useful indicators to help HR teams focus their efforts both in identifying issues directly and/or in balancing against the bias.
 
